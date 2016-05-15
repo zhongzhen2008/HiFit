@@ -48,6 +48,8 @@
             </intent-filter>
         </receiver>
 
+        <activity android:name="com.hifit.zz.activity.SettingsActivity">
+        </activity>
     </application>
 
 </manifest>

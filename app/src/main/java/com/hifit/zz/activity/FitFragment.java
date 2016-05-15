@@ -4,8 +4,10 @@ import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -32,6 +34,7 @@ public class FitFragment extends Fragment {
     private View rootView;
     private CardView cvSteps;
     private TextView tvTodaySteps;
+    private TextView tvTargetSteps;
     private ProgressBar pbTodaySteps;
     private CardView cvRun;
     private Button btRun;
@@ -53,6 +56,7 @@ public class FitFragment extends Fragment {
             Log.d(TAG_FIT_FRAGMENT, "***** FitFragment: onServiceConnected()");
             mStepBinder = (StepService.StepBinder) service;
             tvTodaySteps.setText("" + mStepBinder.getTodayStep());
+            pbTodaySteps.setProgress(mStepBinder.getTodayStep());
 
             mStepBinder.addStepListener(mStepChange);
         }
@@ -86,13 +90,12 @@ public class FitFragment extends Fragment {
         getActivity().bindService(intentStep, connStep, Service.BIND_AUTO_CREATE);
 
         tvTodaySteps = (TextView) rootView.findViewById(R.id.tv_today_steps);
-/*        if (mStepBinder != null) {
-            tvTodaySteps.setText("" + mStepBinder.getTodayStep());
-        }*/
+        tvTargetSteps = (TextView) rootView.findViewById(R.id.tv_target_steps);
+        //tvTargetSteps.setText("" + getTargetStep());
 
         pbTodaySteps = (ProgressBar) rootView.findViewById(R.id.pb_today_steps);
-        pbTodaySteps.setMax(7000);
-        pbTodaySteps.setProgress(5678);
+        //pbTodaySteps.setMax(getTargetStep());
+        //pbTodaySteps.setProgress(Integer.parseInt((String)tvTodaySteps.getText()));
 
         cvSteps = (CardView) rootView.findViewById(R.id.card_view_step);
         cvSteps.setOnClickListener(new View.OnClickListener() {
@@ -128,12 +131,24 @@ public class FitFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        tvTargetSteps.setText("" + getTargetStep());
+        pbTodaySteps.setMax(getTargetStep());
+
+    }
+
+    @Override
     public void onDestroy() {
         getActivity().unbindService(connStep);
         super.onDestroy();
     }
 
-
+    public int getTargetStep() {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String strStep = settings.getString(SettingsFragment.SETTINGS_TARGET_STEP_KEY, "7000");
+        return Integer.parseInt(strStep);
+    }
 
 
 }
