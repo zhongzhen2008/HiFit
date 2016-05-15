@@ -13,5 +13,8 @@
     <string name="target_step">每日目标步数</string>
     <string name="target_step_summary">大多数人设置7000步</string>
     <string name="step_uint">步</string>
+    <string name="step_to_target">距离今日目标还有</string>
+    <string name="step_reach_target">已达成今日目标!</string>
+
 
 </resources>

@@ -5,6 +5,9 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ClipDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -12,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +46,9 @@ public class FitFragment extends Fragment {
     private StepService.StepBinder mStepBinder;
     private StepChange mStepChange = new StepChange();
 
+    private int mTargetStep;
+    private int mTodayStep;
+
     private class StepChange implements StepService.StepListener {
         @Override
         public void onStepChanged(int step) {
@@ -55,8 +62,7 @@ public class FitFragment extends Fragment {
         public void onServiceConnected(ComponentName name, IBinder service) {
             Log.d(TAG_FIT_FRAGMENT, "***** FitFragment: onServiceConnected()");
             mStepBinder = (StepService.StepBinder) service;
-            tvTodaySteps.setText("" + mStepBinder.getTodayStep());
-            pbTodaySteps.setProgress(mStepBinder.getTodayStep());
+            updateTodayStep();
 
             mStepBinder.addStepListener(mStepChange);
         }
@@ -133,9 +139,28 @@ public class FitFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        tvTargetSteps.setText("" + getTargetStep());
-        pbTodaySteps.setMax(getTargetStep());
+        updateTargetStep();
+        updateTodayStep();
 
+//        ClipDrawable d = new ClipDrawable(new ColorDrawable(Color.BLUE), Gravity.LEFT, ClipDrawable.HORIZONTAL);
+//        pbTodaySteps.setProgressDrawable(d);
+    }
+
+    private void updateTargetStep() {
+        mTargetStep = getTargetStep();
+        tvTargetSteps.setText(" /" + mTargetStep);
+        pbTodaySteps.setMax(mTargetStep);
+        if (mStepBinder != null) {
+            mStepBinder.setTargetStep(mTargetStep);
+        }
+    }
+
+    private void updateTodayStep() {
+        if (mStepBinder != null) {
+            mTodayStep =  mStepBinder.getTodayStep();
+            tvTodaySteps.setText("" + mTodayStep);
+            pbTodaySteps.setProgress(mTodayStep);
+        }
     }
 
     @Override
