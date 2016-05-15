@@ -47,7 +47,6 @@ public class CalcBaseStep {
     }
 
     public boolean isBase(Date date) {
-        //return (date.equals(mBaseDate)) ? false : true;
         if (mBaseDate == null) {
             return true;
         }
@@ -80,14 +79,7 @@ public class CalcBaseStep {
 
     public int calcTodayStep(Date date, int step) {
         if (isBase(date)) {
-            //mBaseDate = date;
-            mBaseDate = getDateString(date); //"" + date.getYear() + date.getMonth() + date.getDate();
-            prefEditor.putString(PREFS_KEY_BASEDATE, mBaseDate);
-            mBaseStep = step;
-            prefEditor.putInt(PREFS_KEY_BASESTEP, mBaseStep);
-            prefEditor.commit();
-
-            Toast.makeText(mContext, "calcTodayStep isBase:" + mBaseDate + "," + mBaseStep, Toast.LENGTH_LONG).show();
+            initTodayStep(date, step);
         }
 
         if (hasStepBeforeBoot(date)) {
@@ -98,11 +90,12 @@ public class CalcBaseStep {
     }
 
     public void initTodayStep(Date date, int step) {
-        mBaseDate = getDateString(date); //"" + date.getYear() + date.getMonth() + date.getDate();
+        mBaseDate = getDateString(date);
         prefEditor.putString(PREFS_KEY_BASEDATE, mBaseDate);
         mBaseStep = step;
         prefEditor.putInt(PREFS_KEY_BASESTEP, mBaseStep);
         prefEditor.commit();
+        Toast.makeText(mContext, "calcTodayStep initTodayStep:" + mBaseDate + "," + mBaseStep, Toast.LENGTH_LONG).show();
     }
 
     public void saveStepBeforeBoot(Date date, int step) {
