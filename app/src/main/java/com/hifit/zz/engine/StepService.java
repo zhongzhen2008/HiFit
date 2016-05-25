@@ -19,8 +19,8 @@ import android.widget.Toast;
 
 import com.hifit.zz.activity.MainActivity;
 import com.hifit.zz.activity.SettingsFragment;
-import com.hifit.zz.com.hifit.zz.utils.LogUtil;
 import com.hifit.zz.hifit.R;
+import com.hifit.zz.utils.LogUtil;
 
 import java.util.Date;
 
@@ -121,7 +121,7 @@ public class StepService extends Service implements SensorEventListener {
     }
 
     private void updateNotification(int step) {
-        mBuilder.setContentTitle("" + step + getString(R.string.step_uint));
+        mBuilder.setContentTitle("" + step + " " + getString(R.string.step_uint));
         if (step < mTargetStep) {
             mBuilder.setContentText(getString(R.string.step_to_target)
                     + " " + (mTargetStep - step) + " " + getApplication().getText(R.string.step_uint));

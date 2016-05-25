@@ -5,6 +5,10 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
+import com.hifit.zz.activity.HifitApp;
+import com.hifit.zz.db.StepItem;
+import com.hifit.zz.utils.LogUtil;
+
 import java.util.Date;
 
 /**
@@ -23,6 +27,8 @@ public class CalcBaseStep {
     private int mBaseStep = 0;
     private String mStepBeforeDate = null;
     private int mStepBeforeBoot = 0;
+
+    private int lastTodayStep = 0;   // 最近一次今日总步数
 
     private Context mContext;
     private SharedPreferences preferences;
@@ -44,6 +50,8 @@ public class CalcBaseStep {
 
         Toast.makeText(mContext, "calcTodayStep create:" + mBaseDate + "," + mBaseStep
                 + "," + mStepBeforeDate + "," + mStepBeforeBoot, Toast.LENGTH_LONG).show();
+        LogUtil.d("calcTodayStep create:" + mBaseDate + "," + mBaseStep
+                + "," + mStepBeforeDate + "," + mStepBeforeBoot);
     }
 
     public boolean isBase(Date date) {
@@ -79,6 +87,9 @@ public class CalcBaseStep {
 
     public int calcTodayStep(Date date, int step) {
         if (isBase(date)) {
+            // 昨天总步数记录到数据库
+            saveTodayStep(date);
+
             initTodayStep(date, step);
         }
 
@@ -86,7 +97,21 @@ public class CalcBaseStep {
             step += mStepBeforeBoot;
         }
 
-        return (step - mBaseStep);
+        lastTodayStep = step - mBaseStep;
+        return lastTodayStep;
+    }
+
+    private void saveTodayStep(Date date) {
+        StepItem stepItem = new StepItem();
+        stepItem.date = getDateString(date);
+        stepItem.step = lastTodayStep;
+        HifitApp app = (HifitApp) mContext.getApplicationContext();
+        app.getStepsDAO().insert(stepItem);
+
+        Toast.makeText(mContext, "存储到数据库 saveTodayStep:" + stepItem.date + "," + stepItem.step, Toast.LENGTH_LONG).show();
+        LogUtil.d("存储到数据库 saveTodayStep:" + stepItem.date + "," + stepItem.step);
+
+        app.getStepsDAO().queryStep();
     }
 
     public void initTodayStep(Date date, int step) {
@@ -96,6 +121,7 @@ public class CalcBaseStep {
         prefEditor.putInt(PREFS_KEY_BASESTEP, mBaseStep);
         prefEditor.commit();
         Toast.makeText(mContext, "calcTodayStep initTodayStep:" + mBaseDate + "," + mBaseStep, Toast.LENGTH_LONG).show();
+        LogUtil.d("calcTodayStep initTodayStep:" + mBaseDate + "," + mBaseStep);
     }
 
     public void saveStepBeforeBoot(Date date, int step) {
