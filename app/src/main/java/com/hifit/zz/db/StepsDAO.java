@@ -43,4 +43,10 @@ public class StepsDAO {
         // 关闭光标
         cursor.close();
     }
+
+    public Cursor queryCursor() {
+        Cursor cursor = mDb.query(HiFitDbHelper.TABLE_STEPS, null, null, null, null, null,
+                null, null);
+        return cursor;
+    }
 }

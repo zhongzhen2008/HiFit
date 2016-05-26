@@ -13,7 +13,7 @@ public class HiFitDbHelper extends SQLiteOpenHelper {
 
     public static final String TABLE_STEPS = "steps";
     private static final String CREATE_TABLE_STEPS = "CREATE TABLE " + TABLE_STEPS + " ("
-            + "id  integer PRIMARY KEY AUTOINCREMENT, "
+            + "_id  integer PRIMARY KEY AUTOINCREMENT, "
             + "date vachar(20) NOT NULL,"
             + "step integer NOT NULL"
             + ");";

@@ -9,6 +9,7 @@ import com.hifit.zz.activity.HifitApp;
 import com.hifit.zz.db.StepItem;
 import com.hifit.zz.utils.LogUtil;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -82,7 +83,11 @@ public class CalcBaseStep {
 
     @NonNull
     private String getDateString(Date date) {
-        return "" + date.getYear() + date.getMonth() + date.getDate();
+        int year = date.getYear() + 1900;
+        int month = date.getMonth() + 1;
+        int day = date.getDate();
+        return "" + year + month + day;
+        //return "" + date.getYear() + date.getMonth() + date.getDate();
     }
 
     public int calcTodayStep(Date date, int step) {
@@ -103,7 +108,17 @@ public class CalcBaseStep {
 
     private void saveTodayStep(Date date) {
         StepItem stepItem = new StepItem();
-        stepItem.date = getDateString(date);
+//        long a = date.getTime();
+//        long b = a - 24*60*60*1000;
+//        Date yesterday = new Date(b);
+//        //Date yesterday = new Date(date.getTime() - 24*60*60*1000);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, -1);
+        //Date yesterday = calendar.getTime();
+
+        stepItem.date = getDateString(calendar.getTime());
         stepItem.step = lastTodayStep;
         HifitApp app = (HifitApp) mContext.getApplicationContext();
         app.getStepsDAO().insert(stepItem);
