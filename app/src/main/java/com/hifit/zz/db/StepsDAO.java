@@ -28,6 +28,22 @@ public class StepsDAO {
         mDb.insert(HiFitDbHelper.TABLE_STEPS, null, values);
     }
 
+    // 有此天数据则刷新，没有则插入
+    public void update(StepItem stepItem) {
+        if (hasItemDate(stepItem.date)) {
+            ContentValues values = stepItem2ContentValues(stepItem);
+            mDb.update(HiFitDbHelper.TABLE_STEPS, values, "date=?", new String[]{stepItem.date});
+        } else {
+            insert(stepItem);
+        }
+    }
+
+    private boolean hasItemDate(String date) {
+        Cursor cursor = mDb.query(HiFitDbHelper.TABLE_STEPS, null, "date=?", new String[]{date}, null, null,
+                null, null);
+        return (cursor.getCount() > 0);
+    }
+
     public void queryStep() {
         // 相当于select * from students ;
         Cursor cursor = mDb.query(HiFitDbHelper.TABLE_STEPS, null, null, null, null, null,
@@ -44,9 +60,9 @@ public class StepsDAO {
         cursor.close();
     }
 
-    public Cursor queryCursor() {
+    public Cursor queryCursorDateDesc() {
         Cursor cursor = mDb.query(HiFitDbHelper.TABLE_STEPS, null, null, null, null, null,
-                null, null);
+                "date desc", null);
         return cursor;
     }
 }

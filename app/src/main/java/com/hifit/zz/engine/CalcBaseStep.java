@@ -9,6 +9,7 @@ import com.hifit.zz.activity.HifitApp;
 import com.hifit.zz.db.StepItem;
 import com.hifit.zz.utils.LogUtil;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -83,10 +84,15 @@ public class CalcBaseStep {
 
     @NonNull
     private String getDateString(Date date) {
-        int year = date.getYear() + 1900;
+/*        int year = date.getYear() + 1900;
         int month = date.getMonth() + 1;
         int day = date.getDate();
-        return "" + year + month + day;
+        return "" + year + month + day;*/
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String s = sdf.format(date);
+        return s;
+
         //return "" + date.getYear() + date.getMonth() + date.getDate();
     }
 
@@ -121,7 +127,8 @@ public class CalcBaseStep {
         stepItem.date = getDateString(calendar.getTime());
         stepItem.step = lastTodayStep;
         HifitApp app = (HifitApp) mContext.getApplicationContext();
-        app.getStepsDAO().insert(stepItem);
+        //app.getStepsDAO().insert(stepItem);
+        app.getStepsDAO().update(stepItem);
 
         Toast.makeText(mContext, "存储到数据库 saveTodayStep:" + stepItem.date + "," + stepItem.step, Toast.LENGTH_LONG).show();
         LogUtil.d("存储到数据库 saveTodayStep:" + stepItem.date + "," + stepItem.step);

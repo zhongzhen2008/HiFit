@@ -53,6 +53,7 @@ public class FitFragment extends Fragment {
         @Override
         public void onStepChanged(int step) {
             //Toast.makeText(getActivity(), "StepChange: " + step, Toast.LENGTH_SHORT).show();
+            mTodayStep = step;
             tvTodaySteps.setText(String.valueOf(step));
         }
     }
@@ -107,7 +108,10 @@ public class FitFragment extends Fragment {
         cvSteps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                Bundle bundle = new Bundle();
+//                bundle.putInt("step", mTodayStep);
                 Intent intent = new Intent(getActivity(), StepHistroyActivity.class);
+                intent.putExtra("step", mTodayStep);
                 startActivity(intent);
             }
         });
