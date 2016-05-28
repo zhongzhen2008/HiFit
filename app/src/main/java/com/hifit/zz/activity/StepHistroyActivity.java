@@ -6,11 +6,16 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 import com.hifit.zz.db.StepItem;
 import com.hifit.zz.hifit.R;
@@ -30,6 +35,8 @@ public class StepHistroyActivity extends AppCompatActivity implements LoaderMana
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step);
+
+        initViews();
 
  /*       HifitApp app = (HifitApp)getApplication();
         Cursor cursor = app.getStepsDAO().queryCursorDateDesc();
@@ -54,6 +61,24 @@ public class StepHistroyActivity extends AppCompatActivity implements LoaderMana
         mListView.setVisibility(View.INVISIBLE);
 
         getLoaderManager().initLoader(0, null, this);
+    }
+
+    private void initViews() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setTitle(R.string.step_detail);
+
+        toolbar.inflateMenu(R.menu.menu_step_graph);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int menuItemId = item.getItemId();
+                if (menuItemId == R.id.action_step_graph) {
+                    Toast.makeText(StepHistroyActivity.this, "点击菜单", Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            }
+        });
     }
 
     private void updateTodayStep() {
