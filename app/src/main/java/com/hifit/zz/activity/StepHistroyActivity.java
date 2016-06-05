@@ -74,7 +74,9 @@ public class StepHistroyActivity extends AppCompatActivity implements LoaderMana
             public boolean onMenuItemClick(MenuItem item) {
                 int menuItemId = item.getItemId();
                 if (menuItemId == R.id.action_step_graph) {
-                    Toast.makeText(StepHistroyActivity.this, "点击菜单", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(StepHistroyActivity.this, "点击菜单", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(StepHistroyActivity.this, StepHistroyGraphActivity.class);
+                    startActivity(intent);
                 }
                 return true;
             }
