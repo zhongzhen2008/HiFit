@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -88,9 +90,12 @@ public class StepService extends Service implements SensorEventListener {
     }
 
     private void showNotification() {
+        Bitmap btm = BitmapFactory.decodeResource(getResources(),
+                R.drawable.ic_launch);
         mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_launch)
+                        .setLargeIcon(btm)
                         .setContentTitle("My notification")
                         .setContentText("Hello World!");
 // Creates an explicit intent for an Activity in your app
